@@ -1,14 +1,13 @@
 import os
 import platform
-import pip
 import requests
 
-def is_arm_mac():
-    """Return True if the current machine is an ARM Mac."""
+def is_apple_silicon_mac():
+    """Return True if the current machine is an Apple Silicon Mac."""
     return platform.machine().startswith("arm64")
 
 def install_hachoir():
-    """Install the latest version of hachoir for M1 or M2 Macs."""
+    """Install the latest version of hachoir for Apple Silicon Macs."""
     try:
         pip.main(["install", "hachoir"])
     except:
@@ -40,13 +39,16 @@ def update_metadata_package():
     os.system("cd metadata-0.2 && pip install -r requirements.txt")
 
 def main():
-    if not is_arm_mac():
-        print("This script is only intended for ARM Macs.")
+    """Check if the current machine is an Apple Silicon Mac.
+    If it is, install hachoir and modify the metadata package requirements.
+    If not, print a message and exit.
+    """
+
+    if not is_apple_silicon_mac():
+        print("This script is only intended for Apple Silicon Macs.")
         exit()
 
-    if not os.geteuid() == 0:
-        print("This script must be run as root. Please run it with sudo.")
-        exit()
+
 
     install_hachoir()
     modify_metadata_requirements()
