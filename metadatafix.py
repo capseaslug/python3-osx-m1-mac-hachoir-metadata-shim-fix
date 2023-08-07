@@ -44,7 +44,7 @@ def modify_metadata_requirements():
     print("Installing modified metadata...")
     pip.main(["install", "-r", "metadata.tar.gz"])
 
-    print("Success! The metadata requirements have been modified and installed.")
+    print("Success! The metadata requirements have been modified and the metadata python library has been installed.")
 
 def main():
     """Check if the current machine is an Apple Silicon Mac.
