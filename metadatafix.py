@@ -1,5 +1,6 @@
 import hachoir.core
 import os
+import platform
 import pip
 
 def compat_version(version):
@@ -8,8 +9,14 @@ def compat_version(version):
         return "1.3.3"
     return version
 
+def is_arm_mac():
+    """Return True if the current machine is an ARM Mac."""
+    return platform.machine().startswith("arm64")
+
 def install_hachoir():
     """Install the latest version of hachoir for M1 or M2 Macs."""
+    if not is_arm_mac():
+        raise Exception("This script is only intended for ARM Macs.")
     pip.main(["install", "hachoir-parser"])
 
 def modify_metadata_requirements():
@@ -29,7 +36,17 @@ def install_metadata():
     """Install the metadata package."""
     pip.main(["install", "metadata==0.2"])
 
-if __name__ == "__main__":
+def main():
+    if not is_arm_mac():
+        print("This script is only intended for ARM Macs.")
+        print("Do you want to continue (Y/N)?")
+        choice = input()
+        if choice != "Y":
+            exit()
+
     install_hachoir()
     modify_metadata_requirements()
     install_metadata()
+
+if __name__ == "__main__":
+    main()
