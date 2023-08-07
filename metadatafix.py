@@ -8,6 +8,10 @@ def compat_version(version):
         return "1.3.3"
     return version
 
+def install_hachoir():
+    """Install the latest version of hachoir for M1 or M2 Macs."""
+    pip.main(["install", "hachoir-parser"])
+
 def modify_metadata_requirements():
     """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
     requirements_file = os.path.join(os.path.dirname(__file__), "metadata", "requirements.txt")
@@ -26,5 +30,6 @@ def install_metadata():
     pip.main(["install", "metadata==0.2"])
 
 if __name__ == "__main__":
+    install_hachoir()
     modify_metadata_requirements()
     install_metadata()
