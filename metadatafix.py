@@ -22,13 +22,13 @@ def modify_metadata_requirements():
 
     for index, requirement in enumerate(requirements):
         if requirement.startswith("hachoir-core=="):
-            requirements[index] = "hachoir-core==1.3.3"
+            requirements[index] = "hachoir==1.3.3"
 
     with open(requirements_file, "w") as f:
         f.writelines(requirements)
 
-def install_metadata():
-    """Install the metadata package."""
+def update_metadata_package():
+    """Update the metadata package to be compatible with hachoir."""
     url = "https://github.com/metadata-dev/metadata/archive/refs/tags/v0.2.tar.gz"
     filename = "metadata-0.2.tar.gz"
     with requests.get(url, stream=True) as r:
@@ -37,7 +37,7 @@ def install_metadata():
                 f.write(chunk)
 
     os.system("tar -xf %s" % filename)
-    os.system("cd metadata-0.2 && pip install .")
+    os.system("cd metadata-0.2 && pip install -r requirements.txt")
 
 def main():
     if not is_arm_mac():
@@ -50,7 +50,7 @@ def main():
 
     install_hachoir()
     modify_metadata_requirements()
-    install_metadata()
+    update_metadata_package()
 
 if __name__ == "__main__":
     main()
