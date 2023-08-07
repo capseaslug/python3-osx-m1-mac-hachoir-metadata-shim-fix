@@ -1,4 +1,6 @@
 import hachoir.core
+import os
+import pip
 
 def compat_version(version):
     """Return a compatible version string for hachoir-core==1.3.3."""
@@ -6,4 +8,23 @@ def compat_version(version):
         return "1.3.3"
     return version
 
-hachoir.core.VERSION = compat_version(hachoir.core.VERSION)
+def modify_metadata_requirements():
+    """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
+    requirements_file = os.path.join(os.path.dirname(__file__), "metadata", "requirements.txt")
+    with open(requirements_file, "r") as f:
+        requirements = f.readlines()
+
+    for index, requirement in enumerate(requirements):
+        if requirement.startswith("hachoir-core=="):
+            requirements[index] = "hachoir-core==1.3.3"
+
+    with open(requirements_file, "w") as f:
+        f.writelines(requirements)
+
+def install_metadata():
+    """Install the metadata package."""
+    pip.main(["install", "metadata==0.2"])
+
+if __name__ == "__main__":
+    modify_metadata_requirements()
+    install_metadata()
