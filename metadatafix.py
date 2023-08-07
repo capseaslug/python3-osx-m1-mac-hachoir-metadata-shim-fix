@@ -1,4 +1,3 @@
-import hachoir.core
 import os
 import platform
 import pip
