@@ -1,6 +1,7 @@
 import os
 import platform
 import requests
+import gzip
 import pip
 
 def is_apple_silicon_mac():
@@ -17,7 +18,7 @@ def install_hachoir():
 def modify_metadata_requirements():
     """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
 
-    # Download the requirements file
+    # Download the metadata package
     url = "https://github.com/metadata-dev/metadata/archive/refs/tags/v0.2.tar.gz"
     filename = "metadata-0.2.tar.gz"
 
@@ -26,9 +27,22 @@ def modify_metadata_requirements():
             for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
 
-    # Modify the requirements file
+    # Uncompress the metadata package
+    os.system("gzip -d %s" % filename)
+
+    # Download the entire library
+    url = "https://hachoir.org/files/hachoir-full-1.3.3.tar.gz"
+    filename = "hachoir-full-1.3.3.tar.gz"
+
+    with requests.get(url, stream=True) as r:
+        with open(filename, "wb") as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                f.write(chunk)
+
+    # Uncompress the library
     os.system("tar -xf %s" % filename)
 
+    # Modify the requirements file
     with open("metadata-0.2/requirements.txt", "r") as f:
         requirements = f.readlines()
 
