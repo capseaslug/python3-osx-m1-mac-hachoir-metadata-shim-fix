@@ -49,6 +49,9 @@ def modify_metadata_requirements():
     with open(filename, "w") as f:
         f.writelines(requirements)
 
+    # Re-gzip the metadata package
+    os.system("gzip %s" % filename)
+
 def update_metadata_package():
     """Update the metadata package to be compatible with hachoir."""
 
