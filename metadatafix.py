@@ -19,7 +19,7 @@ def modify_metadata_requirements():
     """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
 
     # Download the metadata package
-    url = "https://github.com/metadata-dev/metadata/archive/refs/tags/v0.2.tar.gz"
+    url = "https://files.pythonhosted.org/packages/8a/2b/3982e589808af51d6e8d3f7ebb6c540005ad3466d1e4939e57d25cd1d3c0/metadata-0.2.tar.gz"
     filename = "metadata-0.2.tar.gz"
 
     with requests.get(url, stream=True) as r:
@@ -30,27 +30,18 @@ def modify_metadata_requirements():
     # Uncompress the metadata package
     os.system("gzip -d %s" % filename)
 
-    # Download the entire library
-    url = "https://hachoir.org/files/hachoir-full-1.3.3.tar.gz"
-    filename = "hachoir-full-1.3.3.tar.gz"
-
-    with requests.get(url, stream=True) as r:
-        with open(filename, "wb") as f:
-            for chunk in r.iter_content(chunk_size=1024):
-                f.write(chunk)
-
-    # Uncompress the library
-    os.system("tar -xf %s" % filename)
+    # Get the requirements file
+    filename = "metadata-0.2/metadata.egg-info/requires.txt"
 
     # Modify the requirements file
-    with open("metadata-0.2/requirements.txt", "r") as f:
+    with open(filename, "r") as f:
         requirements = f.readlines()
 
     for index, requirement in enumerate(requirements):
         if requirement.startswith("hachoir-core=="):
             requirements[index] = "hachoir==1.3.3"
 
-    with open("metadata-0.2/requirements.txt", "w") as f:
+    with open(filename, "w") as f:
         f.writelines(requirements)
 
 def update_metadata_package():
