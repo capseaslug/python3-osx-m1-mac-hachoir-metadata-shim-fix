@@ -28,6 +28,10 @@ def modify_metadata_requirements():
             for chunk in r.iter_content(chunk_size=1024):
                 f.write(chunk)
 
+    # Check if the file exists
+    if not os.path.exists(filename):
+        raise FileNotFoundError(f"File '{filename}' does not exist.")
+
     # Uncompress the metadata package
     os.system("gzip -d %s" % filename)
 
@@ -48,9 +52,6 @@ def modify_metadata_requirements():
 
     with open(filename, "w") as f:
         f.writelines(requirements)
-
-    # Re-gzip the metadata package
-    os.system("gzip %s" % filename)
 
 def update_metadata_package():
     """Update the metadata package to be compatible with hachoir."""
