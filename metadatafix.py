@@ -2,6 +2,7 @@ import os
 import platform
 import requests
 import gzip
+import re
 import pip
 
 def is_apple_silicon_mac():
@@ -30,8 +31,12 @@ def modify_metadata_requirements():
     # Uncompress the metadata package
     os.system("gzip -d %s" % filename)
 
-    # Get the requirements file
-    filename = "metadata-0.2/metadata.egg-info/requires.txt"
+    # Search for the requirements file
+    for root, directories, files in os.walk("metadata-0.2"):
+        for file in files:
+            if re.match("requirements\.txt", file):
+                filename = os.path.join(root, file)
+                break
 
     # Modify the requirements file
     with open(filename, "r") as f:
