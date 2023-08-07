@@ -49,12 +49,16 @@ def modify_metadata_requirements():
 def main():
     """Check if the current machine is an Apple Silicon Mac.
     If it is, install hachoir and modify the metadata package requirements.
-    If not, print a message and exit.
+    If not, print a warning and continue.
     """
 
-    if not is_apple_silicon_mac():
-        print("This script is only intended for Apple Silicon Macs.")
-        exit()
+    is_apple_silicon = is_apple_silicon_mac()
+    if not is_apple_silicon:
+        print("Warning: This script was made for Apple Silicon Macs. It may not cause any problems on other machines, but it is not guaranteed to work.")
+        answer = input("Are you sure you want to continue? (y/N): ")
+        if answer != "y":
+            print("Exiting...")
+            exit()
 
 
     install_hachoir()
