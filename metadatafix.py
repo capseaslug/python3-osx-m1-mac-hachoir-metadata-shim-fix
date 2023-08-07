@@ -16,7 +16,7 @@ def install_hachoir():
     """Install the latest version of hachoir for M1 or M2 Macs."""
     if not is_arm_mac():
         raise Exception("This script is only intended for ARM Macs.")
-    pip.main(["install", "hachoir-parser"])
+    pip.main(["install", "hachoir"])
 
 def modify_metadata_requirements():
     """Modify the metadata package requirements to be compatible with hachoir-core==1.3.3."""
